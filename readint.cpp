@@ -18,15 +18,12 @@ void fill_vector(istream& ist, vector<int>& v, char terminator)
  for(int j=0;j<v.size();j++)
   cout<<v[j];
  if (ist.eof()) return; // fine: we found the end of file
- if (ist.bad()) error("ist is bad"); // stream corrupted; let’s get out of here!
- if (ist.fail()) { // clean up the mess as best we can and report the problem
- ist.clear(); // clear stream state,
- // so that we can look for terminator
+ // not good() and not bad() and not eof(), ist must be fail()
+ ist.clear(); // clear stream state
  char c;
  ist>>c; // read a character, hopefully terminator
- if (c != terminator) { // unexpected character
- ist.unget(); // put that character back
+ if (c != terminator) { // ouch: not the terminator, so we must fail
+ ist.unget(); // maybe my caller can use that character
  ist.clear(ios_base::failbit); // set the state to fail()
- }
  }
 }
